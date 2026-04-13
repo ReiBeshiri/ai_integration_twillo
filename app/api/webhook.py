@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Request
 
 router = APIRouter()
 
@@ -28,8 +28,9 @@ async def whatsapp_webhook(request: Request):
 Another version of the webhook endpoint for WhatsApp messages using FastAPI's Form dependency
 this is more concise and easier to read, but it maybe not work with all webhook providers that expect form data in a specific format
 You need to adjust the parameter names and types to match the expected format of the webhook provider you are using
-"""
+
 @router.post("/webhook/whatsapp")
 async def whatsapp_webhook_fastapi(Body: str = Form(...), From: str = Form(...)):
     print(f"[WHATSAPP] {From}: {Body}")
     return {"status": f"received from {From}"}
+"""
