@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Request
+from twilio.rest import Client
+import os
 
 router = APIRouter()
+account_sid = ""
+auth_token = ""
 
+client = Client(account_sid, auth_token)
 
 """
 Webhook endpoint for WhatsApp messages
@@ -12,8 +17,8 @@ so in postamn, application/x-www-form-urlencoded not application/json
 verbose version of the webhook endpoint for WhatsApp messages using Request and form data
 this is more flexible and can handle any form data, but it is more verbose and less concise than the FastAPI version
 """
-@router.post("/webhook/whatsapp")
-async def whatsapp_webhook(request: Request):
+@router.post("/webhook/whatsapp/received")
+async def whatsapp_webhook_receive_test(request: Request):
     data = await request.form()
     message = data.get("Body")
     sender = data.get("From")
@@ -23,6 +28,23 @@ async def whatsapp_webhook(request: Request):
     result = f"received from {sender}: {message}"
     return {"status": result}
 
+@router.post("/webhook/whatsapp")
+async def whatsapp_webhook(request: Request):
+    data = await request.form()
+    message = data.get("Body")
+    sender = str(data.get("From"))
+
+    print(f"[WHATSAPP] {sender}: {message}")
+
+    response_text = f"Hai scritto: {message}"
+
+    client.messages.create(
+        from_="whatsapp:+14155238886",  # numero sandbox Twilio 
+        body=response_text,
+        to=sender
+    )
+
+    return {"status": "replied"}
 
 """
 Another version of the webhook endpoint for WhatsApp messages using FastAPI's Form dependency
