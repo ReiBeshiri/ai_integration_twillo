@@ -4,8 +4,8 @@ import os
 from app.services.llm_service import generate_response
 
 router = APIRouter()
-account_sid = ""
-auth_token = ""
+account_sid = os.getenv("TWILIO_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
 
 client = Client(account_sid, auth_token)
 

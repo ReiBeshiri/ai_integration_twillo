@@ -1,6 +1,8 @@
 from groq import AsyncGroq  # Importiamo la versione Asincrona
+import os
 
-client = AsyncGroq(api_key="")
+groq_api_key = os.getenv("GROQ_API_KEY")  # Assicurati di avere la variabile d'ambiente impostata
+client = AsyncGroq(api_key=groq_api_key)
 
 gpt_model = "llama-3.1-8b-instant"
 system_prompt = "Sei un assistente utile e conciso."
