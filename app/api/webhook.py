@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from twilio.rest import Client
 import os
+from app.services.llm_service import generate_response
 
 router = APIRouter()
 account_sid = ""
@@ -36,11 +37,13 @@ async def whatsapp_webhook(request: Request):
 
     print(f"[WHATSAPP] {sender}: {message}")
 
-    response_text = f"Hai scritto: {message}"
+    #response_text = f"Hai scritto: {message}"
+    
+    ai_response_text = await generate_response(str(message))  # genera la risposta usando il servizio LLM
 
     client.messages.create(
         from_="whatsapp:+14155238886",  # numero sandbox Twilio 
-        body=response_text,
+        body=ai_response_text,
         to=sender
     )
 
